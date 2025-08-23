@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Full-time Client</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="auth-container">
+        <div class="auth-form-container">
+            <h2>Create Full-time Client Profile</h2>
+            <form method="post" action="create_fulltime_client_process.php">
+                <h3>Client Information</h3>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter client username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter client email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter phone number">
+                </div>
+
+                <h3>Pet Information</h3>
+                <div class="form-group">
+                    <label for="pet_name">Pet Name</label>
+                    <input type="text" id="pet_name" name="pet_name" placeholder="Enter pet's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="species">Species</label>
+                    <input type="text" id="species" name="species" placeholder="e.g., Dog, Cat" required>
+                </div>
+                <div class="form-group">
+                    <label for="breed">Breed</label>
+                    <input type="text" id="breed" name="breed" placeholder="e.g., German Shepherd, Persian">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob">
+                </div>
+                
+                <button type="submit" class="btn-submit">Create Profile</button>
+            </form>
+            <p><a href="admin_dashboard.php">Go Back to Dashboard</a></p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,145 @@
+/* Services Section Styles */
+.services-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.services-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.service-card {
+    width: 200px;
+    background-color: #fcebeb;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* এটি আইকন এবং টেক্সটকে কার্ডের মাঝখানে আনবে */
+    justify-content: center; /* এটি আইকন এবং টেক্সটকে উল্লম্বভাবে মাঝখানে আনবে */
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+/* সকল সার্ভিস কার্ডে আইকন যোগ করার জন্য */
+.service-card[data-service="lab"] img {
+    content: url('lab-icon.png');
+}
+.service-card[data-service="cat"] img {
+    content: url('cat-icon.png');
+}
+.service-card[data-service="dog"] img {
+    content: url('dog-icon.png');
+}
+.service-card[data-service="rabbit"] img {
+    content: url('rabbit-icon.png');
+}
+.service-card[data-service="bird"] img {
+    content: url('bird-icon.png');
+}
+
+.service-card h4 {
+    font-size: 18px;
+    color: #eb1f48;
+}
+
+.service-details {
+    display: none;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: left;
+}
+
+.service-details.active {
+    display: block;
+}
+
+.service-details img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.service-details h3 {
+    font-size: 24px;
+    color: #eb1f48;
+    margin-bottom: 10px;
+}
+
+.service-details .treatment-list {
+    margin-top: 20px;
+}
+
+.service-details .treatment-list h4 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #fcebeb;
+    padding-bottom: 5px;
+}
+
+.service-details .treatment-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.service-details .treatment-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dotted #e0d7db;
+}
+
+.service-details .treatment-list li:last-child {
+    border-bottom: none;
+}
+
+.service-details .treatment-list li span:last-child {
+    font-size: 24px; /* টাকার আইকন এবং পরিমাণের জন্য ডিফল্ট সাইজ */
+}
+
+/* টাকার আইকন বড় করার জন্য */
+.service-details .treatment-list li span:last-child .taka-icon {
+    font-size: 30px; /* টাকার আইকনের সাইজ বাড়ানো হয়েছে */
+}
+
+/* টাকার পরিমাণ ছোট করার জন্য */
+.service-details .treatment-list li span:last-child .price-amount {
+    font-size: 18px; /* টাকার পরিমাণের সাইজ কমানো হয়েছে */
+}
+
+.back-btn {
+    margin-top: 30px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.back-btn .btn-primary {
+    background-color: #eb1f48;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+}

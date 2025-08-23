@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | KittyPups</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Basic styling - customize as needed */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcebeb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .auth-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 3px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            background: white;
+        }
+        .auth-form-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            width: 400px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container i {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            cursor: pointer;
+            color: #666;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+        p {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="auth-container">
+            <div class="auth-form-container">
+                <h2>Create an Account</h2>
+                <form method="post" action="signup_process.php">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Account Type</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select your role</option>
+                            <option value="customer" selected>Customer</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group password-container">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fa-solid fa-eye" id="togglePassword"></i>
+                    </div>
+                    <button type="submit" class="btn-submit">Sign Up</button>
+                </form>
+                <p>Already have an account? <a href="login.php">Login</a></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function (e) {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+    </script>
+</body>
+</html>

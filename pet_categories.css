@@ -1,0 +1,370 @@
+/* Base Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f3f6;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    /* Buton size changed for better alignment */
+    padding: 6px 12px; 
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* Ensures padding doesn't push it outside */
+}
+
+/* Page Specific Styles */
+.pet-categories-main {
+    padding: 40px 0;
+}
+
+.container-split {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+}
+
+.sidebar-nav {
+    width: 280px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    border: 1px solid #e0d7db;
+    
+}
+
+.sidebar-nav h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #eb1f48;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sidebar-nav #category-list {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav .main-category-item {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav .main-category-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar-nav .main-category-item:hover {
+    background-color: #fcebeb;
+}
+
+.sidebar-nav .main-category-item.active {
+    color: #eb1f48;
+    font-weight: 600;
+}
+
+.sidebar-nav .main-category-item i {
+    color: #eb1f48;
+    margin-right: 10px;
+}
+
+.sidebar-nav .main-category-item .arrow-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-nav .main-category-item.collapsed .arrow-icon {
+    transform: rotate(0deg);
+}
+
+.sidebar-nav .main-category-item:not(.collapsed) .arrow-icon {
+    transform: rotate(90deg);
+}
+
+.sidebar-nav .sub-category-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    overflow: hidden;
+    max-height: 0; /* Initially hidden */
+    transition: max-height 0.3s ease-in-out;
+}
+
+.sidebar-nav .sub-category-list.visible {
+    max-height: 500px; /* Adjust as needed */
+}
+
+.sidebar-nav .sub-category-list li {
+    padding: 8px 10px 8px 40px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.sidebar-nav .sub-category-list li:hover {
+    background-color: #f7f3f6;
+}
+
+.sidebar-nav .sub-category-list li.active {
+    color: #eb1f48;
+    font-weight: 500;
+    background-color: #fcebeb;
+}
+
+/* Right Content - Product Section */
+.products-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e0d7db;
+    /* Height adjusted to match sidebar height */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* To center the content horizontally */
+}
+
+.welcome-image {
+    /* Image size adjusted */
+    max-width: 500px; 
+    height: auto;
+    margin: 0 auto 20px;
+}
+
+.products-section .section-header {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.products-section .section-header h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    border: 1px solid #e0d7db;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+/* ... (অন্যান্য CSS কোড একই থাকবে) ... */
+
+.product-card .product-img-placeholder {
+    width: 100%;
+    height: 180px;
+    background-color: #FDEFF2; /* ছবির কার্ডের ব্যাকগ্রাউন্ড কালার পরিবর্তন করা হয়েছে */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-size: cover;
+    background-position: center;
+}
+
+/* ... (অন্যান্য CSS কোড একই থাকবে) ... */
+
+.product-card h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.product-card .ratings .stars {
+    color: #ffc107;
+}
+
+.product-card .ratings i {
+    font-size: 12px;
+}
+
+.product-card .price {
+    font-weight: 600;
+    color: #eb1f48;
+    margin: 5px 0 10px;
+}
+
+.product-card .actions {
+    display: flex;
+    flex-direction: column;
+    /* Gap adjusted to fix alignment issues */
+    gap: 5px; 
+    margin-top: auto;
+}
+
+.btn-add-to-cart {
+    background-color: #fcebeb; 
+    color: #eb1f48;
+    border: 1px solid #eb1f48;
+}
+
+.btn-add-to-cart:hover {
+    background-color: #e6c5c7;
+}
+
+.btn-buy-now {
+    background-color: #eb1f48;
+    color: #ffffff;
+    border: 1px solid #eb1f48;
+}
+
+.btn-buy-now:hover {
+    background-color: #c9193d;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .container-split {
+        flex-direction: column;
+    }
+    .sidebar-nav {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* ... (বাকি কোড একই থাকবে) ... */
+
+.welcome-section h2 {
+    /* H2 ট্যাগের রঙ পরিবর্তন করা হয়েছে */
+    color: #eb1f48; 
+}
+
+.welcome-section p {
+    /* P ট্যাগের রঙ পরিবর্তন করা হয়েছে */
+    color: #eb1f48;
+}
+
+/* ... (বাকি কোড একই থাকবে) ... */
+
+
+/* ... (অন্যান্য CSS কোড) ... */
+
+/* ... (বাকি CSS কোড) ... */
+
+.container-split {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+    align-items: stretch; /* এই লাইনটি যুক্ত করলে দুটি কলামের উচ্চতা সমান হবে */
+}
+
+/* ... (বাকি CSS কোড) ... */
+
+/* ... (অন্যান্য CSS কোড) ... */
+
+/* ... (বাকি CSS কোড) ... */
+
+.sidebar-nav {
+    width: 280px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    border: 1px solid #e0d7db;
+    /* এই লাইনটি মুছে দিন */
+    /* height: fit-content; */
+}
+
+/* ... (বাকি CSS কোড) ... */
+
+
+/* ... (বাকি CSS কোড) ... */
+
+.sidebar-nav {
+    width: 280px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    /* এখানে বর্ডার যোগ করা হয়েছে */
+    border: 2px solid #FDEFF2;
+}
+
+.products-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px; 
+    /* এখানে বর্ডার যোগ করা হয়েছে */
+    border: 2px solid #FDEFF2;
+    border-radius: 10px;
+}
+
+/* ... (বাকি CSS কোড) ... */
+
+/* ... (বাকি CSS কোড) ... */
+
+.sidebar-nav .back-to-home-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background-color: #eb1f48;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav .back-to-home-btn:hover {
+    background-color: #c9193d;
+}
+
+/* ... (বাকি CSS কোড) ... */

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccine Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fcf7f7;
+            --card-bg: #ffffff;
+            --primary-pink: #ffb6c1;
+            --secondary-pink: #fcdde0;
+            --main-red: #ff4757;
+            --hover-red: #e83a48;
+            --text-dark: #1a1a1a;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            padding: 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--primary-pink), var(--main-red));
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom: none;
+        }
+        .list-group-item {
+            background-color: var(--secondary-pink);
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            border-radius: 10px;
+            border-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="my-2">Vaccine Tracker</h3>
+            <button class="btn btn-sm" style="background-color: var(--hover-red); color: white;" data-bs-toggle="modal" data-bs-target="#addVaccineModal">
+                নতুন ভ্যাকসিন যোগ করুন
+            </button>
+        </div>
+        <div class="card-body">
+            <ul class="list-group" id="vaccineList">
+                <!-- JavaScript এর মাধ্যমে ডেটা লোড হবে -->
+                <li class="list-group-item text-center text-muted">ভ্যাকসিনের ডেটা লোড হচ্ছে...</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding New Vaccine -->
+<div class="modal fade" id="addVaccineModal" tabindex="-1" aria-labelledby="addVaccineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(90deg, var(--primary-pink), var(--main-red));">
+                <h5 class="modal-title" id="addVaccineModalLabel" style="color: white;">নতুন ভ্যাকসিন যোগ করুন</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addVaccineForm">
+                    <div class="mb-3">
+                        <label for="vaccineName" class="form-label">ভ্যাকসিনের নাম</label>
+                        <input type="text" class="form-control" id="vaccineName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastDate" class="form-label">শেষ তারিখ</label>
+                        <input type="date" class="form-control" id="lastDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nextDate" class="form-label">পরবর্তী তারিখ</label>
+                        <input type="date" class="form-control" id="nextDate" required>
+                    </div>
+                    <button type="submit" class="btn w-100" style="background-color: var(--main-red); color: white;">যোগ করুন</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // এই ফাংশনটি ড্যাশবোর্ডে ভ্যাকসিনের ডেটা রেন্ডার করে।
+    function renderVaccines() {
+        const vaccineList = document.getElementById('vaccineList');
+        const vaccines = JSON.parse(localStorage.getItem('vaccines')) || [];
+        
+        if (vaccines.length > 0) {
+            vaccineList.innerHTML = ''; 
+
+            vaccines.forEach(vaccine => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${vaccine.name}</strong><br>
+                            <small class="text-muted">Last Done: ${vaccine.lastDate}</small>
+                        </div>
+                        <span class="badge rounded-pill" style="background-color: var(--main-red);">Next Due: ${vaccine.nextDate}</span>
+                    </div>
+                `;
+                vaccineList.appendChild(listItem);
+            });
+        } else {
+            vaccineList.innerHTML = '<li class="list-group-item text-center text-muted">কোনো ভ্যাকসিনের ডেটা পাওয়া যায়নি।</li>';
+        }
+    }
+
+    window.onload = function() {
+        renderVaccines();
+
+        const addVaccineForm = document.getElementById('addVaccineForm');
+        addVaccineForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const vaccineName = document.getElementById('vaccineName').value;
+            const lastDate = document.getElementById('lastDate').value;
+            const nextDate = document.getElementById('nextDate').value;
+
+            const newVaccine = {
+                name: vaccineName,
+                lastDate: lastDate,
+                nextDate: nextDate
+            };
+            
+            const vaccines = JSON.parse(localStorage.getItem('vaccines')) || [];
+            vaccines.push(newVaccine);
+            localStorage.setItem('vaccines', JSON.stringify(vaccines));
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addVaccineModal'));
+            modal.hide();
+
+            addVaccineForm.reset();
+            renderVaccines();
+        });
+    };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

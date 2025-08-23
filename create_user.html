@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create User</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="auth-container">
+        <div class="auth-form-container">
+            <h2>Create New User</h2>
+            <form method="post" action="create_user_process.php">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="normal_client">Normal Client</option>
+                        <option value="fulltime_client">Fulltime Client</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Create User</button>
+            </form>
+            <p><a href="admin_dashboard.php">Go Back</a></p>
+        </div>
+    </main>
+</body>
+</html>

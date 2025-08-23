@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #fcf7f7;
+            --card-bg: #ffffff;
+            --primary-pink: #ffb6c1; /* Lighter pink */
+            --secondary-pink: #fcdde0;
+            --main-red: #ff4757; /* Softer, lighter red */
+            --hover-red: #e83a48;
+            --text-dark: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--primary-pink), var(--main-red)); /* A gradient from pink to a softer red */
+            color: white;
+        }
+
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: var(--secondary-pink);
+        }
+        
+        .navbar-custom .navbar-brand:hover {
+            color: var(--secondary-pink);
+        }
+
+        .card-custom {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-custom {
+            background: linear-gradient(90deg, var(--primary-pink), var(--main-red)); /* A gradient from pink to a softer red */
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--hover-red);
+            color: white;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            background-color: var(--secondary-pink);
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .feature-list a {
+            text-decoration: none;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .alert-custom {
+            background-color: var(--secondary-pink);
+            border-left: 4px solid var(--main-red);
+            border-radius: 0.5rem;
+            color: var(--text-dark);
+        }
+    </style>
+<!-- </head>
+<body> -->
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-home"></i> Back to Home</a>
+            </li>
+        </ul>
+        <a class="navbar-brand mx-auto" href="#">Client Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content Container -->
+<div class="container mt-4">
+    <div class="row" id="dashboard-content">
+        <!-- Dashboard content will be rendered here by JS -->
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // This is a simple JS simulation of a user's role and data.
+        // In a real application, this data would come from your PHP backend.
+        let userRole = 'normal_client'; // Default role is normal_client. You can change it to 'full_time_client' to test.
+        let clientInfo = {
+            name: 'Example Name',
+            address: 'Example Address, Dhaka',
+            email: 'example@email.com',
+            contact: '+8801234567890'
+        };
+
+        const dashboardContent = document.getElementById('dashboard-content');
+
+        // Function to render the dashboard based on user role and data
+        function renderDashboard() {
+            dashboardContent.innerHTML = ''; // Clear previous content
+
+            if (userRole === 'full_time_client') {
+                // Full-time client dashboard
+                dashboardContent.innerHTML = `
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-custom text-center" role="alert">
+                            <h4 class="alert-heading">Congratulations! You are a full-time client.</h4>
+                            <p>You can enjoy all the features. You can switch back to the normal dashboard if needed.</p>
+                            <button id="switchToNormalBtn" class="btn btn-sm btn-custom">View Normal Dashboard</button>
+                        </div>
+                    </div>
+                    <!-- New Client Info Card with input form -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-user"></i> Client Information</h5>
+                            <form id="clientInfoForm" class="text-center">
+                                <div class="mb-3 text-start">
+                                    <label for="clientName" class="form-label">Name:</label>
+                                    <input type="text" class="form-control" id="clientName" value="${clientInfo.name}" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label for="clientAddress" class="form-label">Address:</label>
+                                    <input type="text" class="form-control" id="clientAddress" value="${clientInfo.address}" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label for="clientEmail" class="form-label">Email:</label>
+                                    <input type="email" class="form-control" id="clientEmail" value="${clientInfo.email}" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label for="clientContact" class="form-label">Contact Number:</label>
+                                    <input type="tel" class="form-control" id="clientContact" value="${clientInfo.contact}" required>
+                                </div>
+                                <button type="submit" class="btn btn-custom mx-auto d-block">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Pet Profile Card with updated links and removed button -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-paw"></i> Pet Profile</h5>
+                            <p>Manage your pet's details, health records, and photos.</p>
+                            <ul class="feature-list">
+                                <li><a href="Pet_Details_Dashboard.html">Pet Details</a></li>
+                                <li><a href="medical-reports.html">Medical Reports</a></li>
+                                <li><a href="digital-prescriptions.html">Digital Prescriptions</a></li>
+                                <li><a href="vaccine-tracker.html">Vaccine Tracker</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Appointment Management Card with correct link -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-calendar-check"></i> Appointment Management</h5>
+                            <p>Book appointments, get reminders, and have virtual consultations.</p>
+                            <a href="appointments.html" class="btn btn-custom mt-auto">Book Now</a>
+                        </div>
+                    </div>
+                    <!-- Products & Medications Card with correct link -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-prescription-bottle"></i> Products & Medications</h5>
+                            <p>Shop for food, medicine, and accessories from our online store.</p>
+                            <a href="products.html" class="btn btn-custom mt-auto">Shop Now</a>
+                        </div>
+                    </div>
+                    <!-- Educational Content Card with correct link -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-book"></i> Educational Content</h5>
+                            <p>Learn new things about pet health and care with our articles.</p>
+                            <a href="educational-content.html" class="btn btn-custom mt-auto">Explore</a>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listener for the new form
+                document.getElementById('clientInfoForm').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    // Get form values
+                    const name = document.getElementById('clientName').value;
+                    const address = document.getElementById('clientAddress').value;
+                    const email = document.getElementById('clientEmail').value;
+                    const contact = document.getElementById('clientContact').value;
+
+                    // Update the simulated clientInfo object
+                    clientInfo = { name, address, email, contact };
+                    
+                    alert('Client information saved successfully!');
+                    renderDashboard(); // Re-render the dashboard to show updated data
+                });
+            } else {
+                // Normal client dashboard
+                dashboardContent.innerHTML = `
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-custom text-center" role="alert">
+                            <h4 class="alert-heading">Welcome, Normal Client!</h4>
+                            <p>Here you can purchase products and book appointments. Upgrade to get all the features.</p>
+                            <button id="upgradeToFullTimeBtn" class="btn btn-sm btn-custom">Become a Full-time Client</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Product Shopping</h5>
+                            <p>Shop for food, medicine, and accessories from our online store.</p>
+                            <a href="products.html" class="btn btn-custom mt-auto">Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card-custom">
+                            <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Appointment Booking</h5>
+                            <p>Easily book an appointment for your pet.</p>
+                            <a href="appointments.html" class="btn btn-custom mt-auto">Book Now</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add event listeners for the role change buttons
+            const upgradeBtn = document.getElementById('upgradeToFullTimeBtn');
+            if (upgradeBtn) {
+                upgradeBtn.addEventListener('click', function() {
+                    userRole = 'full_time_client';
+                    renderDashboard(); // Re-render the dashboard
+                    alert('Congratulations! You are now a full-time client.');
+                });
+            }
+
+            const switchToNormalBtn = document.getElementById('switchToNormalBtn');
+            if (switchToNormalBtn) {
+                switchToNormalBtn.addEventListener('click', function() {
+                    userRole = 'normal_client';
+                    renderDashboard();
+                    alert('You have switched to the normal dashboard.');
+                });
+            }
+        }
+
+        renderDashboard(); // Initial render
+    });
+</script>
+</body>
+</html>

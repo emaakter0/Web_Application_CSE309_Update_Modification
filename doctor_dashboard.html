@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #fcf7f7;
+            --card-bg: #ffffff;
+            --primary-pink: #ffb6c1; /* Lighter pink */
+            --secondary-pink: #fcdde0;
+            --main-red: #ff4757; /* Softer, lighter red */
+            --hover-red: #e83a48;
+            --text-dark: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--primary-pink), var(--main-red));
+            color: white;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: var(--secondary-pink);
+        }
+
+        .navbar-custom .navbar-brand:hover {
+            color: var(--secondary-pink);
+        }
+
+        .card-custom {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-custom {
+            background: linear-gradient(90deg, var(--primary-pink), var(--main-red));
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--hover-red);
+            color: white;
+        }
+
+        .item-card {
+            background-color: var(--secondary-pink);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .item-card:hover {
+            background-color: #fce3e6;
+        }
+        
+        .list-group-item {
+            background-color: var(--secondary-pink);
+            border: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-custom {
+            background-color: var(--secondary-pink);
+            border-left: 4px solid var(--main-red);
+            border-radius: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        .dashboard-metric-card {
+            background-color: var(--secondary-pink);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        .dashboard-metric-card .h2 {
+            color: var(--main-red);
+            font-size: 3rem;
+        }
+        
+        #patientProfileView {
+            display: none; /* Initially hidden */
+        }
+
+        /* Modal for prescription and report details */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 1rem;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Custom Message Box for alerts */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1001;
+            display: none;
+            text-align: center;
+            max-width: 80%;
+        }
+        .last-item-card {
+            background-color: #e0f7fa; /* A light blue to differentiate */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px dashed #b2ebf2;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand mx-auto" href="#"><i class="fas fa-user-md me-2"></i>Doctor Dashboard</a>
+    </div>
+</nav>
+
+<!-- Main Content Container -->
+<div class="container mt-4">
+    <!-- Dashboard Overview -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>Dashboard Overview</h5>
+                <hr>
+                <div class="row g-4 h-100">
+                    <div class="col-md-4 d-flex">
+                        <div class="dashboard-metric-card flex-grow-1">
+                            <h5 class="h6">Today's Appointments</h5>
+                            <span class="h2" id="today-appointments-count">0</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex">
+                        <div class="dashboard-metric-card flex-grow-1">
+                            <h5 class="h6">Total Patients</h5>
+                            <span class="h2" id="total-patients-count">0</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex">
+                        <div class="alert alert-custom py-4 flex-grow-1 d-flex flex-column justify-content-center">
+                            <h6 class="alert-heading">Urgent Notice / Reminder</h6>
+                            <p class="mb-0">From Admin: Please follow up on Alex's patient report.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient & Pet Management Section -->
+    <div class="row">
+        <!-- Add Patient Form Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-user-plus me-2"></i>Add New Patient</h5>
+                <form id="addPatientForm">
+                    <div class="mb-3">
+                        <label for="patientName" class="form-label">Patient Name (Pet Parent)</label>
+                        <input type="text" class="form-control" id="patientName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="patientContact" class="form-label">Contact</label>
+                        <input type="tel" class="form-control" id="patientContact" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="petName" class="form-label">Pet Name</label>
+                        <input type="text" class="form-control" id="petName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="petType" class="form-label">Pet Type</label>
+                        <select class="form-select" id="petType" required>
+                            <option value="">Select...</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Rabbit">Rabbit</option>
+                            <option value="Bird">Bird</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="petAge" class="form-label">Pet Age</label>
+                        <input type="text" class="form-control" id="petAge" required>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">Add Patient</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Patient List Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-hospital-user me-2"></i>Patient List</h5>
+                <p class="text-muted">Click on a patient to view their profile.</p>
+                <div id="patientList">
+                    <!-- JavaScript will populate this list -->
+                    <p class="text-center text-muted">No patients found.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Profile View (Initially hidden) -->
+    <div class="row" id="patientProfileView">
+        <div class="col-md-12 mb-4">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-address-card me-2"></i>Patient Profile: <span id="profilePatientName"></span></h5>
+                <button type="button" class="btn btn-sm btn-outline-danger float-end" onclick="hideProfile()">Close Profile</button>
+                <hr>
+                <div id="profileDetails">
+                    <!-- Details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prescription Section with side-by-side cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-prescription-bottle-alt me-2"></i>Create New Prescription</h5>
+                <form id="prescriptionForm">
+                    <div class="mb-3">
+                        <label for="prescriptionPetName" class="form-label">Pet Name</label>
+                        <input type="text" class="form-control" id="prescriptionPetName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prescriptionPetAge" class="form-label">Age</label>
+                        <input type="text" class="form-control" id="prescriptionPetAge" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prescriptionPetType" class="form-label">Pet Type</label>
+                        <select class="form-select" id="prescriptionPetType" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Rabbit">Rabbit</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="currentDisease" class="form-label">Current Disease</label>
+                        <textarea class="form-control" id="currentDisease" rows="2" placeholder="e.g., Fever, Skin infection" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="previousDisease" class="form-label">Previous Disease?</label>
+                        <textarea class="form-control" id="previousDisease" rows="2" placeholder="If any, mention here"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tests" class="form-label">Required Tests?</label>
+                        <textarea class="form-control" id="tests" rows="2" placeholder="List the tests if yes"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medication" class="form-label">Medication & Dosage</label>
+                        <textarea class="form-control" id="medication" rows="4" placeholder="e.g., Paracetamol (50mg) - 2 times a day" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea class="form-control" id="instructions" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="surgery" class="form-label">Surgery Details</label>
+                        <textarea class="form-control" id="surgery" rows="3" placeholder="If required, provide details"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">Create Prescription</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-eye me-2"></i>Last Prescription</h5>
+                <div id="lastPrescriptionCard" class="last-item-card">
+                    <p class="text-muted text-center mb-0">No prescriptions have been created yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Report Section with side-by-side cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-file-upload me-2"></i>Upload Patient Report</h5>
+                <form id="reportUploadForm">
+                    <div class="mb-3">
+                        <label for="reportPetName" class="form-label">Pet Name</label>
+                        <input type="text" class="form-control" id="reportPetName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reportFile" class="form-label">Report File</label>
+                        <input type="file" class="form-control" id="reportFile" required>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">Upload Report</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-eye me-2"></i>Last Report</h5>
+                <div id="lastReportCard" class="last-item-card">
+                    <p class="text-muted text-center mb-0">No reports have been uploaded yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Appointment & History Section -->
+    <div class="row">
+        <!-- Upcoming Appointments Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-calendar-check me-2"></i>Upcoming Appointments</h5>
+                <div id="upcomingAppointmentsList">
+                    <!-- Appointment list populated by JS -->
+                    <p class="text-center text-muted">No upcoming appointments.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Appointment History Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card-custom">
+                <h5 class="card-title"><i class="fas fa-history me-2"></i>Appointment History</h5>
+                <div id="appointmentHistoryList">
+                    <!-- Appointment history populated by JS -->
+                    <p class="text-center text-muted">No history found.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Prescription Details Modal -->
+<div id="prescriptionModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('prescriptionModal')">&times;</span>
+    <h5 class="mb-3">Prescription Details</h5>
+    <div id="modalContent"></div>
+    <button class="btn btn-custom mt-3" onclick="editPrescriptionModal()">Edit</button>
+  </div>
+</div>
+
+<!-- Report Details Modal -->
+<div id="reportModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('reportModal')">&times;</span>
+    <h5 class="mb-3">Report Details</h5>
+    <div id="reportModalContent"></div>
+  </div>
+</div>
+
+<!-- Custom Message Box for alerts -->
+<div class="message-box" id="messageBox">
+  <div id="messageText"></div>
+  <button class="btn btn-custom mt-3" onclick="closeMessageBox()">OK</button>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- DOM Elements ---
+        const addPatientForm = document.getElementById('addPatientForm');
+        const prescriptionForm = document.getElementById('prescriptionForm');
+        const reportUploadForm = document.getElementById('reportUploadForm');
+        const patientList = document.getElementById('patientList');
+        const totalPatientsCount = document.getElementById('total-patients-count');
+        const todayAppointmentsCount = document.getElementById('today-appointments-count');
+        const upcomingAppointmentsList = document.getElementById('upcomingAppointmentsList');
+        const appointmentHistoryList = document.getElementById('appointmentHistoryList');
+        const patientProfileView = document.getElementById('patientProfileView');
+        const lastPrescriptionCard = document.getElementById('lastPrescriptionCard');
+        const lastReportCard = document.getElementById('lastReportCard');
+
+        // --- Helper Functions ---
+        function getLocalStorageData(key) {
+            return JSON.parse(localStorage.getItem(key)) || [];
+        }
+
+        function setLocalStorageData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function getCurrentDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US');
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            return { date, time };
+        }
+
+        // Custom alert function
+        function showMessage(message) {
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+            messageText.textContent = message;
+            messageBox.style.display = 'block';
+        }
+
+        // --- Render Functions ---
+
+        // Function to render the main patient list and update dropdowns
+        function renderPatients() {
+            const patients = getLocalStorageData('patients');
+            patientList.innerHTML = '';
+            totalPatientsCount.textContent = patients.length;
+
+            if (patients.length > 0) {
+                patients.forEach((patient, index) => {
+                    const patientCard = document.createElement('div');
+                    patientCard.className = 'item-card';
+                    patientCard.setAttribute('data-index', index);
+                    patientCard.innerHTML = `
+                        <p><strong>Patient Name:</strong> ${patient.patientName}</p>
+                        <p><strong>Pet:</strong> ${patient.petName} (${patient.petType}, ${patient.petAge})</p>
+                    `;
+                    patientCard.addEventListener('click', () => showPatientProfile(index));
+                    patientList.appendChild(patientCard);
+                });
+            } else {
+                patientList.innerHTML = '<p class="text-center text-muted">No patients found.</p>';
+            }
+        }
+        
+        // Function to render upcoming and past appointments
+        function renderAppointments() {
+            const appointments = getLocalStorageData('appointments');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Filter for upcoming appointments
+            const upcoming = appointments.filter(app => app.date >= today).sort((a, b) => new Date(a.date) - new Date(b.date));
+            todayAppointmentsCount.textContent = upcoming.length;
+            upcomingAppointmentsList.innerHTML = '';
+            if (upcoming.length > 0) {
+                upcoming.forEach((appointment) => {
+                    const appointmentCard = document.createElement('div');
+                    appointmentCard.className = 'item-card';
+                    appointmentCard.innerHTML = `
+                        <p><strong>Patient:</strong> ${appointment.patient}</p>
+                        <p><strong>Date:</strong> ${appointment.date}</p>
+                        <p><strong>Time:</strong> ${appointment.time}</p>
+                        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="showPatientProfileByName('${appointment.patient}', ${JSON.stringify(appointment).split('"').join("'")})">View Profile</button>
+                    `;
+                    upcomingAppointmentsList.appendChild(appointmentCard);
+                });
+            } else {
+                upcomingAppointmentsList.innerHTML = '<p class="text-center text-muted">No upcoming appointments.</p>';
+            }
+
+            // Filter for past appointments (history)
+            const history = appointments.filter(app => app.date < today).sort((a, b) => new Date(b.date) - new Date(a.date));
+            appointmentHistoryList.innerHTML = '';
+            if (history.length > 0) {
+                history.forEach((appointment) => {
+                    const appointmentCard = document.createElement('div');
+                    appointmentCard.className = 'item-card';
+                    appointmentCard.innerHTML = `
+                        <p><strong>Patient:</strong> ${appointment.patient}</p>
+                        <p><strong>Date:</strong> ${appointment.date}</p>
+                        <p><strong>Time:</strong> ${appointment.time}</p>
+                        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="showPatientProfileByName('${appointment.patient}', ${JSON.stringify(appointment).split('"').join("'")})">View Profile</button>
+                    `;
+                    appointmentHistoryList.appendChild(appointmentCard);
+                });
+            } else {
+                appointmentHistoryList.innerHTML = '<p class="text-center text-muted">No history found.</p>';
+            }
+        }
+        
+        // Function to render the last created prescription
+        function renderLastPrescription() {
+            const prescriptions = getLocalStorageData('prescriptions');
+            if (prescriptions.length > 0) {
+                const lastPrescription = prescriptions[prescriptions.length - 1];
+                lastPrescriptionCard.innerHTML = `
+                    <p><strong>Pet Name:</strong> ${lastPrescription.petName}</p>
+                    <p><strong>Date:</strong> ${lastPrescription.date}</p>
+                    <p><strong>Time:</strong> ${lastPrescription.time}</p>
+                    <p><strong>Disease:</strong> ${lastPrescription.currentDisease}</p>
+                    <button class="btn btn-sm btn-primary mt-2" onclick="showPrescriptionDetails(${JSON.stringify(lastPrescription).split('"').join("'")})">View Details</button>
+                `;
+            } else {
+                lastPrescriptionCard.innerHTML = '<p class="text-muted text-center mb-0">No prescriptions have been created yet.</p>';
+            }
+        }
+
+        // Function to render the last uploaded report
+        function renderLastReport() {
+            const reports = getLocalStorageData('reports');
+            if (reports.length > 0) {
+                const lastReport = reports[reports.length - 1];
+                lastReportCard.innerHTML = `
+                    <p><strong>Pet Name:</strong> ${lastReport.petName}</p>
+                    <p><strong>Date:</strong> ${lastReport.date}</p>
+                    <p><strong>Time:</strong> ${lastReport.time}</p>
+                    <p><strong>File:</strong> ${lastReport.reportName}</p>
+                    <button class="btn btn-sm btn-primary mt-2" onclick="showReportDetails(${JSON.stringify(lastReport).split('"').join("'")})">View Details</button>
+                `;
+            } else {
+                lastReportCard.innerHTML = '<p class="text-muted text-center mb-0">No reports have been uploaded yet.</p>';
+            }
+        }
+
+        // --- Profile and Modal Logic ---
+        
+        // Function to show patient profile with all details
+        function showPatientProfile(index, appointment = null) {
+            const patients = getLocalStorageData('patients');
+            const prescriptions = getLocalStorageData('prescriptions');
+            const reports = getLocalStorageData('reports');
+
+            const patient = patients[index];
+            const profileDetails = document.getElementById('profileDetails');
+            document.getElementById('profilePatientName').textContent = patient.patientName;
+            
+            // Filter data for the selected patient
+            const patientPrescriptions = prescriptions.filter(p => p.petName === patient.petName);
+            const patientReports = reports.filter(r => r.petName === patient.petName);
+            
+            let appointmentCardHtml = '';
+            if (appointment) {
+                appointmentCardHtml = `
+                    <div class="card bg-light p-3 mb-4">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Appointment Details</h6>
+                        <p class="mb-1"><strong>Date:</strong> ${appointment.date}</p>
+                        <p><strong>Time:</strong> ${appointment.time}</p>
+                        <button class="btn btn-custom w-100" onclick="preparePrescriptionForm('${patient.petName}')">Create New Prescription</button>
+                    </div>
+                `;
+            }
+
+            // Populate profile details
+            profileDetails.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-info-circle me-2"></i>Patient Information</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Patient Name:</strong> ${patient.patientName}</li>
+                            <li class="list-group-item"><strong>Contact:</strong> ${patient.patientContact}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-paw me-2"></i>Pet Information</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Pet Name:</strong> ${patient.petName}</li>
+                            <li class="list-group-item"><strong>Pet Type:</strong> ${patient.petType}</li>
+                            <li class="list-group-item"><strong>Age:</strong> ${patient.petAge}</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                ${appointmentCardHtml}
+                <hr>
+                <h6><i class="fas fa-file-alt me-2"></i>Medical History & Reports</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Prescription History</h6>
+                        ${patientPrescriptions.length > 0 ? 
+                            patientPrescriptions.map(p => `
+                                <div class="item-card my-2" onclick="showPrescriptionDetails(${JSON.stringify(p).split('"').join("'")})">
+                                    <p><strong>Date:</strong> ${p.date}</p>
+                                    <p><strong>Time:</strong> ${p.time}</p>
+                                    <p><strong>Disease:</strong> ${p.currentDisease}</p>
+                                </div>
+                            `).join('') : '<p class="text-muted">No prescriptions found.</p>'
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Uploaded Reports</h6>
+                        ${patientReports.length > 0 ? 
+                            patientReports.map(r => `
+                                <div class="item-card my-2" onclick="showReportDetails(${JSON.stringify(r).split('"').join("'")})">
+                                    <p><strong>Date:</strong> ${r.date}</p>
+                                    <p><strong>Time:</strong> ${r.time}</p>
+                                    <p><strong>File:</strong> ${r.reportName}</p>
+                                </div>
+                            `).join('') : '<p class="text-muted">No reports found.</p>'
+                        }
+                    </div>
+                </div>
+            `;
+            patientProfileView.style.display = 'block';
+            window.scrollTo(0, 0); // Scroll to top to see the profile
+        }
+        
+        // Helper function to show patient profile by name
+        function showPatientProfileByName(patientName, appointment = null) {
+            const patients = getLocalStorageData('patients');
+            const patientIndex = patients.findIndex(p => p.patientName === patientName);
+            if (patientIndex !== -1) {
+                showPatientProfile(patientIndex, appointment);
+            }
+        }
+
+
+        // Function to show prescription details in a modal
+        function showPrescriptionDetails(prescription) {
+            const modal = document.getElementById('prescriptionModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <p><strong>Pet Name:</strong> ${prescription.petName}</p>
+                <p><strong>Date:</strong> ${prescription.date}</p>
+                <p><strong>Time:</strong> ${prescription.time}</p>
+                <p><strong>Pet Age:</strong> ${prescription.petAge}</p>
+                <p><strong>Pet Type:</strong> ${prescription.petType}</p>
+                <p><strong>Current Disease:</strong> ${prescription.currentDisease}</p>
+                <p><strong>Previous Disease:</strong> ${prescription.previousDisease || 'N/A'}</p>
+                <p><strong>Required Tests:</strong> ${prescription.tests || 'N/A'}</p>
+                <p><strong>Medication & Dosage:</strong> ${prescription.medication}</p>
+                <p><strong>Instructions:</strong> ${prescription.instructions}</p>
+                <p><strong>Surgery Details:</strong> ${prescription.surgery || 'N/A'}</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+        
+        // Function to show report details in a modal
+        function showReportDetails(report) {
+            const modal = document.getElementById('reportModal');
+            const modalContent = document.getElementById('reportModalContent');
+            
+            modalContent.innerHTML = `
+                <p><strong>Pet Name:</strong> ${report.petName}</p>
+                <p><strong>Date:</strong> ${report.date}</p>
+                <p><strong>Time:</strong> ${report.time}</p>
+                <p><strong>Report:</strong> ${report.reportName}</p>
+                <p class="text-muted mt-3">This is a simulation. In a real app, the file would be viewed here.</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Function to close any modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Function to close custom message box
+        function closeMessageBox() {
+            document.getElementById('messageBox').style.display = 'none';
+        }
+
+        // Function to handle edit button in modal
+        function editPrescriptionModal() {
+            showMessage('You can now edit this prescription.');
+            closeModal('prescriptionModal');
+        }
+
+        // Function to hide patient profile
+        function hideProfile() {
+            patientProfileView.style.display = 'none';
+        }
+        
+        // Function to pre-fill prescription form with patient's pet name
+        function preparePrescriptionForm(petName) {
+            document.getElementById('prescriptionPetName').value = petName;
+            window.scrollTo(0, document.getElementById('prescriptionForm').offsetTop);
+        }
+
+        // --- Event Listeners for Forms ---
+
+        // Handle adding a new patient
+        addPatientForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newPatient = {
+                patientName: document.getElementById('patientName').value,
+                patientContact: document.getElementById('patientContact').value,
+                petName: document.getElementById('petName').value,
+                petType: document.getElementById('petType').value,
+                petAge: document.getElementById('petAge').value,
+            };
+            
+            const patients = getLocalStorageData('patients');
+            patients.push(newPatient);
+            setLocalStorageData('patients', patients);
+            
+            showMessage('Patient added successfully!');
+            addPatientForm.reset();
+            renderPatients();
+        });
+
+        // Handle creating a new prescription
+        prescriptionForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const { date, time } = getCurrentDateTime();
+            const newPrescription = {
+                petName: document.getElementById('prescriptionPetName').value,
+                petAge: document.getElementById('prescriptionPetAge').value,
+                petType: document.getElementById('prescriptionPetType').value,
+                currentDisease: document.getElementById('currentDisease').value,
+                previousDisease: document.getElementById('previousDisease').value,
+                tests: document.getElementById('tests').value,
+                medication: document.getElementById('medication').value,
+                instructions: document.getElementById('instructions').value,
+                surgery: document.getElementById('surgery').value,
+                date,
+                time,
+            };
+
+            const prescriptions = getLocalStorageData('prescriptions');
+            prescriptions.push(newPrescription);
+            setLocalStorageData('prescriptions', prescriptions);
+
+            showMessage(`Prescription for pet ${newPrescription.petName} created successfully!`);
+            prescriptionForm.reset();
+            renderLastPrescription(); // Call new render function
+        });
+
+        // Handle report upload
+        reportUploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const { date, time } = getCurrentDateTime();
+            const newReport = {
+                petName: document.getElementById('reportPetName').value,
+                reportName: document.getElementById('reportFile').files[0].name,
+                date,
+                time,
+            };
+
+            const reports = getLocalStorageData('reports');
+            reports.push(newReport);
+            setLocalStorageData('reports', reports);
+
+            showMessage(`Report for pet ${newReport.petName} uploaded successfully!`);
+            reportUploadForm.reset();
+            renderLastReport(); // Call new render function
+        });
+        
+        // --- Dummy Data and Initial Render on Page Load ---
+        // Simulating data being set by an admin/client
+        function createDummyData() {
+            const patients = [
+                { patientName: 'Ahmed Khan', patientContact: '01712345678', petName: 'Leo', petType: 'Dog', petAge: '3 years' },
+                { patientName: 'Fatema Begum', patientContact: '01987654321', petName: 'Mimi', petType: 'Cat', petAge: '1.5 years' },
+                { patientName: 'Saima Islam', patientContact: '01855554444', petName: 'Tutu', petType: 'Rabbit', petAge: '6 months' },
+            ];
+            const appointments = [
+                { patient: 'Ahmed Khan', date: '2025-08-16', time: '10:00 AM' },
+                { patient: 'Fatema Begum', date: '2025-08-15', time: '02:30 PM' },
+                { patient: 'Saima Islam', date: '2025-08-17', time: '11:00 AM' },
+                { patient: 'Ahmed Khan', date: '2025-08-10', time: '09:00 AM' }
+            ];
+
+            if (!localStorage.getItem('patients')) {
+                setLocalStorageData('patients', patients);
+            }
+            if (!localStorage.getItem('appointments')) {
+                setLocalStorageData('appointments', appointments);
+            }
+        }
+        
+        createDummyData(); // Create dummy data on first load
+        renderPatients();
+        renderAppointments();
+        renderLastPrescription();
+        renderLastReport();
+    });
+
+    // Make the functions globally accessible for event listeners in HTML
+    function showPatientProfileByName(patientName, appointment = null) {
+        const patients = JSON.parse(localStorage.getItem('patients')) || [];
+        const patientIndex = patients.findIndex(p => p.patientName === patientName);
+        if (patientIndex !== -1) {
+            showPatientProfile(patientIndex, appointment);
+        }
+    }
+    function hideProfile() {
+        document.getElementById('patientProfileView').style.display = 'none';
+    }
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+    function editPrescriptionModal() {
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        messageText.textContent = 'You can now edit this prescription.';
+        messageBox.style.display = 'block';
+        closeModal('prescriptionModal');
+    }
+    function closeMessageBox() {
+        document.getElementById('messageBox').style.display = 'none';
+    }
+    function showPrescriptionDetails(prescription) {
+        const modal = document.getElementById('prescriptionModal');
+        const modalContent = document.getElementById('modalContent');
+        
+        modalContent.innerHTML = `
+            <p><strong>Pet Name:</strong> ${prescription.petName}</p>
+            <p><strong>Date:</strong> ${prescription.date}</p>
+            <p><strong>Time:</strong> ${prescription.time}</p>
+            <p><strong>Pet Age:</strong> ${prescription.petAge}</p>
+            <p><strong>Pet Type:</strong> ${prescription.petType}</p>
+            <p><strong>Current Disease:</strong> ${prescription.currentDisease}</p>
+            <p><strong>Previous Disease:</strong> ${prescription.previousDisease || 'N/A'}</p>
+            <p><strong>Required Tests:</strong> ${prescription.tests || 'N/A'}</p>
+            <p><strong>Medication & Dosage:</strong> ${prescription.medication}</p>
+            <p><strong>Instructions:</strong> ${prescription.instructions}</p>
+            <p><strong>Surgery Details:</strong> ${prescription.surgery || 'N/A'}</p>
+        `;
+        
+        modal.style.display = 'block';
+    }
+    function showReportDetails(report) {
+        const modal = document.getElementById('reportModal');
+        const modalContent = document.getElementById('reportModalContent');
+        
+        modalContent.innerHTML = `
+            <p><strong>Pet Name:</strong> ${report.petName}</p>
+            <p><strong>Date:</strong> ${report.date}</p>
+            <p><strong>Time:</strong> ${report.time}</p>
+            <p><strong>Report:</strong> ${report.reportName}</p>
+            <p class="text-muted mt-3">This is a simulation. In a real app, the file would be viewed here.</p>
+        `;
+        
+        modal.style.display = 'block';
+    }
+
+    // This is required to access showPatientProfile from global scope
+    function showPatientProfile(index, appointment = null) {
+        const patients = JSON.parse(localStorage.getItem('patients')) || [];
+        const prescriptions = JSON.parse(localStorage.getItem('prescriptions')) || [];
+        const reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+        const patient = patients[index];
+        const profileDetails = document.getElementById('profileDetails');
+        document.getElementById('profilePatientName').textContent = patient.patientName;
+        
+        const patientPrescriptions = prescriptions.filter(p => p.petName === patient.petName);
+        const patientReports = reports.filter(r => r.petName === patient.petName);
+
+        let appointmentCardHtml = '';
+        if (appointment) {
+            appointmentCardHtml = `
+                <div class="card bg-light p-3 mb-4">
+                    <h6><i class="fas fa-calendar-alt me-2"></i>Appointment Details</h6>
+                    <p class="mb-1"><strong>Date:</strong> ${appointment.date}</p>
+                    <p><strong>Time:</strong> ${appointment.time}</p>
+                    <button class="btn btn-custom w-100" onclick="preparePrescriptionForm('${patient.petName}')">Create New Prescription</button>
+                </div>
+            `;
+        }
+
+        profileDetails.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-info-circle me-2"></i>Patient Information</h6>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Patient Name:</strong> ${patient.patientName}</li>
+                        <li class="list-group-item"><strong>Contact:</strong> ${patient.patientContact}</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-paw me-2"></i>Pet Information</h6>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Pet Name:</strong> ${patient.petName}</li>
+                        <li class="list-group-item"><strong>Pet Type:</strong> ${patient.petType}</li>
+                        <li class="list-group-item"><strong>Age:</strong> ${patient.petAge}</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            ${appointmentCardHtml}
+            <hr>
+            <h6><i class="fas fa-file-alt me-2"></i>Medical History & Reports</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Prescription History</h6>
+                    ${patientPrescriptions.length > 0 ? 
+                        patientPrescriptions.map(p => `
+                            <div class="item-card my-2" onclick="showPrescriptionDetails(${JSON.stringify(p).split('"').join("'")})">
+                                <p><strong>Date:</strong> ${p.date}</p>
+                                <p><strong>Time:</strong> ${p.time}</p>
+                                <p><strong>Disease:</strong> ${p.currentDisease}</p>
+                            </div>
+                        `).join('') : '<p class="text-muted">No prescriptions found.</p>'
+                    }
+                </div>
+                <div class="col-md-6">
+                    <h6>Uploaded Reports</h6>
+                    ${patientReports.length > 0 ? 
+                        patientReports.map(r => `
+                            <div class="item-card my-2" onclick="showReportDetails(${JSON.stringify(r).split('"').join("'")})">
+                                <p><strong>Date:</strong> ${r.date}</p>
+                                <p><strong>Time:</strong> ${r.time}</p>
+                                <p><strong>File:</strong> ${r.reportName}</p>
+                            </div>
+                        `).join('') : '<p class="text-muted">No reports found.</p>'
+                    }
+                </div>
+            </div>
+        `;
+        document.getElementById('patientProfileView').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+    
+    // Function to pre-fill prescription form
+    function preparePrescriptionForm(petName) {
+        document.getElementById('prescriptionPetName').value = petName;
+        window.scrollTo(0, document.getElementById('prescriptionForm').offsetTop);
+    }
+
+</script>
+</body>
+</html>
